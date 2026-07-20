@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BARISTA 369 - Menu</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #1a120b;
+    --bg-card: #2c1810;
+    --accent-gold: #c9a96e;
+    --accent-cream: #f5e6d3;
+    --text-light: #fff8f0;
+    --text-muted: #b8a89a;
+    --coffee-brown: #4a2c17;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-light);
+    min-height: 100vh;
+  }
+
+  .menu-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    text-align: center;
+    padding: 40px 0 30px;
+    background: linear-gradient(180deg, #2c1810 0%, var(--bg-dark) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(201,169,110,0.08) 0%, transparent 60%);
+    animation: pulse 6s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+  }
+
+  .brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--accent-gold);
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+    text-shadow: 0 4px 20px rgba(201,169,110,0.3);
+  }
+
+  .brand-subtitle {
+    font-size: 13px;
+    letter-spacing: 6px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  .divider {
+    width: 80px;
+    height: 2px;
+    background: var(--accent-gold);
+    margin: 16px auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== CATEGORY NAV ===== */
+  .category-nav {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 20px 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: sticky;
+    top: 0;
+    background: var(--bg-dark);
+    z-index: 100;
+    border-bottom: 1px solid rgba(201,169,110,0.15);
+  }
+
+  .category-nav::-webkit-scrollbar { display: none; }
+
+  .cat-btn {
+    flex-shrink: 0;
+    padding: 10px 22px;
+    border: 1px solid rgba(201,169,110,0.3);
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .cat-btn:hover, .cat-btn.active {
+    background: var(--accent-gold);
+    color: var(--bg-dark);
+    border-color: var(--accent-gold);
+    box-shadow: 0 4px 15px rgba(201,169,110,0.3);
+  }
+
+  /* ===== SECTIONS ===== */
+  .section {
+    display: none;
+    padding: 30px 0;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: var(--accent-gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent-gold), transparent);
+  }
+
+  /* ===== ITEMS GRID ===== */
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  /* ===== ITEM CARD ===== */
+  .item-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(201,169,110,0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+  }
+
+  .item-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 30px rgba(201,169,110,0.1);
+    border-color: rgba(201,169,110,0.3);
+  }
+
+  .item-card .img-wrap {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .item-card .img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+
+  .item-card:hover .img-wrap img {
+    transform: scale(1.08);
+  }
+
+  .item-card .img-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, var(--bg-card) 0%, transparent 50%);
+  }
+
+  .item-card .info {
+    padding: 16px 18px 18px;
+  }
+
+  .item-card .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--text-light);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .item-card .desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .item-card .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    background: rgba(201,169,110,0.15);
+    color: var(--accent-gold);
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+  }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .modal-overlay.show {
+    display: flex;
+    opacity: 1;
+  }
+
+  .modal-content {
+    background: var(--bg-card);
+    border-radius: 20px;
+    max-width: 480px;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid rgba(201,169,110,0.2);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    position: relative;
+  }
+
+  .modal-overlay.show .modal-content {
+    transform: scale(1);
+  }
+
+  .modal-img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+  }
+
+  .modal-body {
+    padding: 24px;
+  }
+
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--accent-gold);
+    margin-bottom: 8px;
+  }
+
+  .modal-desc {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+
+  .modal-close:hover { background: rgba(0,0,0,0.8); }
+
+  .order-btn {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent-gold);
+    color: var(--bg-dark);
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .order-btn:hover {
+    background: #d4b87a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(201,169,110,0.3);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 640px) {
+    .brand-name { font-size: 36px; letter-spacing: 4px; }
+    .items-grid { grid-template-columns: 1fr; }
+    .section-title { font-size: 22px; }
+  }
+
+  /* ===== FLOATING PARTICLES ===== */
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--accent-gold);
+    border-radius: 50%;
+    opacity: 0.2;
+    animation: float 15s infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.3; }
+    90% { opacity: 0.3; }
+    100% { transform: translateY(-10vh) rotate(720deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating Particles Background -->
+<div class="particles" id="particles"></div>
+
+<div class="menu-container">
+
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <h1 class="brand-name">BARISTA 369</h1>
+    <div class="divider"></div>
+    <p class="brand-subtitle">Artisan Coffee & Beverages</p>
+  </header>
+
+  <!-- ===== CATEGORY NAVIGATION ===== -->
+  <!-- To add a new category: copy a button, change data-cat and text -->
+  <nav class="category-nav" id="categoryNav">
+    <button class="cat-btn active" data-cat="hot-coffee">Hot Coffee</button>
+    <button class="cat-btn" data-cat="hot-chocolate">Hot Chocolate</button>
+    <button class="cat-btn" data-cat="iced-matcha">Iced Matcha</button>
+    <button class="cat-btn" data-cat="iced-coffee">Iced Coffee</button>
+    <button class="cat-btn" data-cat="frappes">Frappes</button>
+    <button class="cat-btn" data-cat="signature">369 Signature</button>
+    <button class="cat-btn" data-cat="smoothies">Smoothies</button>
+    <button class="cat-btn" data-cat="mojito">Mojito</button>
+    <button class="cat-btn" data-cat="iced-tea">Iced Tea</button>
+  </nav>
+
+  <!-- ==================== HOT COFFEE ==================== -->
+  <!-- To add a new item: copy a .item-card block, update data-name, data-img, data-desc, img src, and text -->
+  <section class="section active" id="hot-coffee">
+    <h2 class="section-title">Hot Coffee</h2>
+    <div class="items-grid">
+
+      <div class="item-card" data-name="Espresso" data-img="https://images.unsplash.com/photo-1510707577715-ae3c2f3f2ce5?w=600" data-desc="Rich, bold, and intensely aromatic. Our signature espresso is pulled to perfection with a golden crema that speaks of quality beans and expert craft.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1510707577715-ae3c2f3f2ce5?w=600" alt="Espresso"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Espresso</div><div class="desc">Intensely rich single shot with golden crema</div><span class="tag">Classic</span></div>
+      </div>
+
+      <div class="item-card" data-name="Double Espresso" data-img="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600" data-desc="Twice the intensity, twice the pleasure. A powerful double shot for those who demand bold flavor in every sip.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600" alt="Double Espresso"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Double Espresso</div><div class="desc">Bold double shot for the true coffee lover</div><span class="tag">Strong</span></div>
+      </div>
+
+      <div class="item-card" data-name="Cortado" data-img="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600" data-desc="Perfectly balanced espresso cut with silky steamed milk. The cortado delivers harmony in a glass — neither too strong nor too milky.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600" alt="Cortado"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Cortado</div><div class="desc">Espresso balanced with silky steamed milk</div><span class="tag">Balanced</span></div>
+      </div>
+
+      <div class="item-card" data-name="Americano" data-img="https://images.unsplash.com/photo-1551030173-122aabc4489c?w=600" data-desc="Smooth and mellow, our Americano combines rich espresso with hot water for a full-bodied cup that is easy to enjoy any time of day.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1551030173-122aabc4489c?w=600" alt="Americano"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Americano</div><div class="desc">Smooth espresso diluted to perfection</div><span class="tag">Classic</span></div>
+      </div>
+
+      <div class="item-card" data-name="Flat White" data-img="https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=600" data-desc="Velvety microfoam meets bold espresso in this Australian classic. The flat white is all about that silky texture and intense coffee flavor.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1577968897966-3d4325b36b61?w=600" alt="Flat White"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Flat White</div><div class="desc">Velvety microfoam with intense espresso</div><span class="tag">Creamy</span></div>
+      </div>
+
+      <div class="item-card" data-name="Cappuccino" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="A cloud of frothy milk atop rich espresso, finished with a dusting of cocoa. The cappuccino is Italy's gift to the coffee world.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Cappuccino"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Cappuccino</div><div class="desc">Frothy milk cloud atop rich espresso</div><span class="tag">Italian</span></div>
+      </div>
+
+      <div class="item-card" data-name="Latte" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="Creamy steamed milk poured over a double shot of espresso, creating a canvas for beautiful latte art. Comfort in every cup.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Latte</div><div class="desc">Creamy milk over double espresso shot</div><span class="tag">Popular</span></div>
+      </div>
+
+      <div class="item-card" data-name="Macchiato" data-img="https://images.unsplash.com/photo-1485808191679-5f86510681a2?w=600" data-desc="Espresso stained with just a dollop of frothy milk. The macchiato is for purists who want a touch of creaminess without losing the coffee's edge.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1485808191679-5f86510681a2?w=600" alt="Macchiato"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Macchiato</div><div class="desc">Espresso stained with a dollop of foam</div><span class="tag">Bold</span></div>
+      </div>
+
+      <div class="item-card" data-name="Mocha" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Where coffee meets chocolate. Our mocha blends rich espresso with premium cocoa and steamed milk for a decadent treat.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Mocha"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Mocha</div><div class="desc">Rich espresso meets premium chocolate</div><span class="tag">Sweet</span></div>
+      </div>
+
+      <!-- FLAVOURED LATTES -->
+      <div class="item-card" data-name="Vanilla Latte" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="Smooth vanilla syrup swirled into our signature latte. A timeless classic that never goes out of style.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Vanilla Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Vanilla Latte</div><div class="desc">Classic vanilla swirled in creamy latte</div><span class="tag">Flavoured</span></div>
+      </div>
+
+      <div class="item-card" data-name="Hazelnut Latte" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="Nutty, warm, and utterly comforting. Our hazelnut latte brings the taste of roasted hazelnuts to your cup.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Hazelnut Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Hazelnut Latte</div><div class="desc">Roasted hazelnut warmth in every sip</div><span class="tag">Nutty</span></div>
+      </div>
+
+      <div class="item-card" data-name="Caramel Latte" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="Buttery caramel meets espresso and steamed milk. Sweet, smooth, and absolutely irresistible.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Caramel Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Caramel Latte</div><div class="desc">Buttery caramel swirled in creamy latte</div><span class="tag">Sweet</span></div>
+      </div>
+
+      <div class="item-card" data-name="Coconut Cream Latte" data-img="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600" data-desc="Tropical vibes in a cup. Creamy coconut milk blended with espresso for a vacation-worthy latte experience.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600" alt="Coconut Cream Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Coconut Cream Latte</div><div class="desc">Tropical coconut meets rich espresso</div><span class="tag">Tropical</span></div>
+      </div>
+
+      <div class="item-card" data-name="Tiramisu Latte" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="Inspired by the classic Italian dessert. Coffee, mascarpone notes, and a hint of cocoa — liquid tiramisu in a cup.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Tiramisu Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Tiramisu Latte</div><div class="desc">Italian dessert inspired creamy latte</div><span class="tag">Dessert</span></div>
+      </div>
+
+      <div class="item-card" data-name="Irish Cream Latte" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="Rich Irish cream flavor swirled into our signature latte. Warm, creamy, and wonderfully indulgent.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Irish Cream Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Irish Cream Latte</div><div class="desc">Rich Irish cream in creamy latte</div><span class="tag">Creamy</span></div>
+      </div>
+
+      <div class="item-card" data-name="Lotus Latte" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="The cult favorite — caramelized biscuit spread meets espresso and steamed milk. Sweet, spiced, and utterly addictive.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Lotus Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Lotus Latte</div><div class="desc">Caramelized biscuit spread latte</div><span class="tag">Trending</span></div>
+      </div>
+
+      <div class="item-card" data-name="Butterscotch Latte" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="Old-fashioned butterscotch candy flavor meets modern latte craft. Sweet, buttery, and nostalgically delicious.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Butterscotch Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Butterscotch Latte</div><div class="desc">Buttery old-fashioned candy flavor</div><span class="tag">Sweet</span></div>
+      </div>
+
+      <div class="item-card" data-name="Salted Caramel Latte" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="The perfect balance of sweet and salty. Our salted caramel latte is a flavor symphony that keeps you coming back.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Salted Caramel Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Salted Caramel Latte</div><div class="desc">Sweet and salty caramel perfection</div><span class="tag">Best Seller</span></div>
+      </div>
+
+      <div class="item-card" data-name="Spanish Latte" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="Sweetened condensed milk gives this latte its signature richness. A beloved Middle Eastern and Spanish tradition.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Spanish Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Spanish Latte</div><div class="desc">Condensed milk richness in every sip</div><span class="tag">Rich</span></div>
+      </div>
+
+      <div class="item-card" data-name="Mint Latte" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="Cool, refreshing mint meets warm espresso. An unexpected combination that works beautifully together.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Mint Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Mint Latte</div><div class="desc">Cool refreshing mint meets warm espresso</div><span class="tag">Fresh</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== HOT CHOCOLATE ==================== -->
+  <section class="section" id="hot-chocolate">
+    <h2 class="section-title">Hot Chocolate</h2>
+    <div class="items-grid">
+
+      <div class="item-card" data-name="Classic Hot Chocolate" data-img="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" data-desc="Velvety smooth hot chocolate made with premium cocoa and steamed milk. Pure comfort in a mug.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" alt="Classic Hot Chocolate"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Classic Hot Chocolate</div><div class="desc">Velvety smooth premium cocoa comfort</div><span class="tag">Classic</span></div>
+      </div>
+
+      <div class="item-card" data-name="Marshmallow Hot Chocolate" data-img="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" data-desc="Our classic hot chocolate topped with a mountain of fluffy marshmallows that melt into sweet, gooey perfection.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" alt="Marshmallow Hot Chocolate"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Marshmallow Hot Chocolate</div><div class="desc">Topped with fluffy melting marshmallows</div><span class="tag">Sweet</span></div>
+      </div>
+
+      <div class="item-card" data-name="Coconut Hot Chocolate" data-img="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600" data-desc="Tropical twist on a winter classic. Creamy coconut milk blended with rich cocoa for an island-inspired treat.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600" alt="Coconut Hot Chocolate"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Coconut Hot Chocolate</div><div class="desc">Tropical coconut meets rich cocoa</div><span class="tag">Tropical</span></div>
+      </div>
+
+      <div class="item-card" data-name="Mint Hot Chocolate" data-img="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" data-desc="Cool peppermint meets warm chocolate. A refreshing twist that tastes like the holidays in every sip.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" alt="Mint Hot Chocolate"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Mint Hot Chocolate</div><div class="desc">Cool peppermint meets warm chocolate</div><span class="tag">Fresh</span></div>
+      </div>
+
+      <div class="item-card" data-name="Strawberry Hot Chocolate" data-img="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" data-desc="Pink, pretty, and delicious. Real strawberry flavor swirled into creamy white hot chocolate.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" alt="Strawberry Hot Chocolate"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Strawberry Hot Chocolate</div><div class="desc">Real strawberry in creamy white chocolate</div><span class="tag">Pink</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== ICED MATCHA ==================== -->
+  <section class="section" id="iced-matcha">
+    <h2 class="section-title">Iced Matcha Bar</h2>
+    <div class="items-grid">
+
+      <div class="item-card" data-name="Vanilla Matcha" data-img="https://images.unsplash.com/photo-1515823662972-da6a2e1d3142?w=600" data-desc="Premium Japanese matcha blended with vanilla and milk over ice. Smooth, earthy, and subtly sweet.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1515823662972-da6a2e1d3142?w=600" alt="Vanilla Matcha"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Vanilla Matcha</div><div class="desc">Premium matcha with smooth vanilla</div><span class="tag">Classic</span></div>
+      </div>
+
+      <div class="item-card" data-name="Caramel Matcha" data-img="https://images.unsplash.com/photo-1515823662972-da6a2e1d3142?w=600" data-desc="Earthy matcha meets buttery caramel. An unexpected pairing that creates pure magic in a glass.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1515823662972-da6a2e1d3142?w=600" alt="Caramel Matcha"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Caramel Matcha</div><div class="desc">Earthy matcha meets buttery caramel</div><span class="tag">Sweet</span></div>
+      </div>
+
+      <div class="item-card" data-name="Hazelnut Matcha" data-img="https://images.unsplash.com/photo-1515823662972-da6a2e1d3142?w=600" data-desc="Nutty hazelnut complements the grassy notes of matcha. A sophisticated flavor combination for the adventurous.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1515823662972-da6a2e1d3142?w=600" alt="Hazelnut Matcha"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Hazelnut Matcha</div><div class="desc">Nutty hazelnut with grassy matcha</div><span class="tag">Nutty</span></div>
+      </div>
+
+      <div class="item-card" data-name="Raspberry Matcha" data-img="https://images.unsplash.com/photo-1515823662972-da6a2e1d3142?w=600" data-desc="Tart raspberry swirled into creamy matcha latte. Beautiful layers and bold berry flavor.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1515823662972-da6a2e1d3142?w=600" alt="Raspberry Matcha"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Raspberry Matcha</div><div class="desc">Tart raspberry swirled in matcha</div><span class="tag">Berry</span></div>
+      </div>
+
+      <div class="item-card" data-name="Strawberry Matcha" data-img="https://images.unsplash.com/photo-1515823662972-da6a2e1d3142?w=600" data-desc="Sweet strawberry syrup layered with iced matcha and milk. Instagram-worthy and absolutely delicious.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1515823662972-da6a2e1d3142?w=600" alt="Strawberry Matcha"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Strawberry Matcha</div><div class="desc">Sweet strawberry layered with matcha</div><span class="tag">Pretty</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== ICED COFFEE ==================== -->
+  <section class="section" id="iced-coffee">
+    <h2 class="section-title">Iced Coffee</h2>
+    <div class="items-grid">
+
+      <div class="item-card" data-name="Black Coffee" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="Bold, cold, and unapologetic. Our iced black coffee is brewed strong and served over ice for maximum refreshment.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Black Coffee"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Black Coffee</div><div class="desc">Bold and unapologetic iced brew</div><span class="tag">Strong</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Americano" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="Espresso poured over ice and cold water. Clean, crisp, and perfectly balanced for hot days.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Iced Americano"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Americano</div><div class="desc">Clean, crisp espresso over ice</div><span class="tag">Refreshing</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Orange Americano" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="A splash of fresh orange juice transforms the classic Americano into a citrusy, refreshing summer drink.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Iced Orange Americano"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Orange Americano</div><div class="desc">Citrusy twist on classic Americano</div><span class="tag">Citrus</span></div>
+      </div>
+
+      <div class="item-card" data-name="Milk Coffee" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="Smooth cold brew coffee blended with creamy milk. Simple, satisfying, and endlessly drinkable.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Milk Coffee"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Milk Coffee</div><div class="desc">Smooth cold brew with creamy milk</div><span class="tag">Creamy</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Latte" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="Espresso and cold milk poured over ice. The iced version of our beloved classic — just as creamy, just as good.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Iced Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Latte</div><div class="desc">Classic espresso with cold milk over ice</div><span class="tag">Popular</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Cappuccino" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Espresso with cold milk and a cap of frothy foam. The iced cappuccino brings Italian elegance to summer sipping.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Iced Cappuccino"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Cappuccino</div><div class="desc">Italian elegance in iced form</div><span class="tag">Frothy</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Affogato" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="A scoop of vanilla ice cream drowned in a hot shot of espresso, served over ice. Dessert and coffee in one glorious drink.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Iced Affogato"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Affogato</div><div class="desc">Ice cream drowned in hot espresso</div><span class="tag">Dessert</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Vanilla Latte" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="Classic vanilla syrup meets iced espresso and cold milk. Sweet, smooth, and perfectly chilled.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Iced Vanilla Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Vanilla Latte</div><div class="desc">Classic vanilla in chilled latte form</div><span class="tag">Sweet</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Caramel Latte" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="Buttery caramel drizzled over iced espresso and milk. Sweet indulgence that cools you down.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Iced Caramel Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Caramel Latte</div><div class="desc">Buttery caramel drizzled over ice</div><span class="tag">Sweet</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Caramel Hazelnut Latte" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="The best of both worlds — caramel and hazelnut swirled into an iced latte. Nutty, sweet, and utterly delicious.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Iced Caramel Hazelnut Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Caramel Hazelnut Latte</div><div class="desc">Caramel and hazelnut in perfect harmony</div><span class="tag">Nutty</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Mocha" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Chocolate and espresso over ice with cold milk. The iced mocha is summer's answer to chocolate cravings.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Iced Mocha"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Mocha</div><div class="desc">Chocolate and espresso over ice</div><span class="tag">Chocolate</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Coconut Cream Latte" data-img="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600" data-desc="Tropical coconut milk blended with iced espresso. A vacation in a glass, no passport required.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600" alt="Iced Coconut Cream Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Coconut Cream Latte</div><div class="desc">Tropical coconut with iced espresso</div><span class="tag">Tropical</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Tiramisu Latte" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Dessert-inspired iced latte with mascarpone notes and cocoa. Tiramisu reimagined as a refreshing drink.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Iced Tiramisu Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Tiramisu Latte</div><div class="desc">Italian dessert as a refreshing drink</div><span class="tag">Dessert</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Irish Cream Latte" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Rich Irish cream flavor in an iced latte. Creamy, cool, and wonderfully indulgent.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Iced Irish Cream Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Irish Cream Latte</div><div class="desc">Rich Irish cream over ice</div><span class="tag">Creamy</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Pistachio Latte" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="Nutty pistachio flavor swirled into iced espresso and milk. Unique, sophisticated, and surprisingly addictive.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Iced Pistachio Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Pistachio Latte</div><div class="desc">Nutty pistachio in creamy iced latte</div><span class="tag">Unique</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Kinder Latte" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="Inspired by the beloved chocolate. Creamy, milky, and sweet — just like your favorite childhood treat.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Iced Kinder Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Kinder Latte</div><div class="desc">Childhood chocolate nostalgia in a glass</div><span class="tag">Sweet</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Lotus Latte" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="The viral favorite goes iced. Caramelized biscuit spread blended with cold espresso and milk.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Iced Lotus Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Lotus Latte</div><div class="desc">Viral biscuit spread in iced form</div><span class="tag">Trending</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Spanish Latte" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="Condensed milk sweetness in an iced latte. Rich, creamy, and refreshingly different.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Iced Spanish Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Spanish Latte</div><div class="desc">Condensed milk richness over ice</div><span class="tag">Rich</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Salted Caramel Latte" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="Sweet and salty caramel over iced espresso. The perfect balance of flavors in a refreshing package.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Iced Salted Caramel Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Salted Caramel Latte</div><div class="desc">Sweet and salty over ice</div><span class="tag">Best Seller</span></div>
+      </div>
+
+      <div class="item-card" data-name="Iced Butterscotch Latte" data-img="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" data-desc="Buttery butterscotch in an iced latte. Nostalgic candy flavor meets modern coffee craft.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600" alt="Iced Butterscotch Latte"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Iced Butterscotch Latte</div><div class="desc">Nostalgic candy flavor over ice</div><span class="tag">Sweet</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== FRAPPES ==================== -->
+  <section class="section" id="frappes">
+    <h2 class="section-title">Frappes</h2>
+    <div class="items-grid">
+
+      <div class="item-card" data-name="Vanilla Frappe" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Blended vanilla coffee frappe topped with whipped cream. Smooth, sweet, and perfectly frosty.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Vanilla Frappe"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Vanilla Frappe</div><div class="desc">Blended vanilla coffee with whipped cream</div><span class="tag">Classic</span></div>
+      </div>
+
+      <div class="item-card" data-name="Caramel Frappe" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Caramel coffee blended with ice and topped with whipped cream and caramel drizzle. Pure indulgence.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Caramel Frappe"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Caramel Frappe</div><div class="desc">Caramel coffee blended with ice</div><span class="tag">Sweet</span></div>
+      </div>
+
+      <div class="item-card" data-name="Hazelnut Frappe" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Nutty hazelnut blended into a frosty coffee frappe. Topped with cream and a sprinkle of crushed nuts.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Hazelnut Frappe"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Hazelnut Frappe</div><div class="desc">Nutty hazelnut in frosty frappe form</div><span class="tag">Nutty</span></div>
+      </div>
+
+      <div class="item-card" data-name="Mocha Frappe" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Chocolate and coffee blended with ice, topped with whipped cream and chocolate drizzle. A frozen mocha dream.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Mocha Frappe"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Mocha Frappe</div><div class="desc">Frozen mocha dream with chocolate drizzle</div><span class="tag">Chocolate</span></div>
+      </div>
+
+      <div class="item-card" data-name="Coconut Cream Frappe" data-img="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600" data-desc="Tropical coconut blended into a creamy coffee frappe. Topped with toasted coconut flakes.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600" alt="Coconut Cream Frappe"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Coconut Cream Frappe</div><div class="desc">Tropical coconut frappe with toasted flakes</div><span class="tag">Tropical</span></div>
+      </div>
+
+      <div class="item-card" data-name="Butterscotch Frappe" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Buttery butterscotch blended into a frosty coffee treat. Nostalgia in every frosty sip.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Butterscotch Frappe"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Butterscotch Frappe</div><div class="desc">Nostalgic butterscotch in frosty form</div><span class="tag">Sweet</span></div>
+      </div>
+
+      <div class="item-card" data-name="Tiramisu Frappe" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Italian dessert reimagined as a frozen frappe. Coffee, mascarpone, and cocoa blended to perfection.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Tiramisu Frappe"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Tiramisu Frappe</div><div class="desc">Italian dessert as frozen frappe</div><span class="tag">Dessert</span></div>
+      </div>
+
+      <div class="item-card" data-name="Irish Cream Frappe" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Rich Irish cream flavor in a blended frappe. Creamy, cool, and decadently smooth.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Irish Cream Frappe"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Irish Cream Frappe</div><div class="desc">Rich Irish cream in blended frappe</div><span class="tag">Creamy</span></div>
+      </div>
+
+      <div class="item-card" data-name="Kinder Frappe" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Inspired by the iconic chocolate. Milky, sweet, and blended into a frosty frappe that brings back childhood memories.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Kinder Frappe"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Kinder Frappe</div><div class="desc">Childhood chocolate in frosty frappe</div><span class="tag">Sweet</span></div>
+      </div>
+
+      <div class="item-card" data-name="Oreo Frappe" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Crushed Oreo cookies blended into a creamy coffee frappe. Topped with whipped cream and a whole cookie.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Oreo Frappe"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Oreo Frappe</div><div class="desc">Crushed Oreo cookies in creamy frappe</div><span class="tag">Cookies</span></div>
+      </div>
+
+      <div class="item-card" data-name="Spanish Frappe" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Condensed milk blended into a frosty coffee frappe. Rich, sweet, and uniquely satisfying.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Spanish Frappe"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Spanish Frappe</div><div class="desc">Condensed milk in frosty frappe form</div><span class="tag">Rich</span></div>
+      </div>
+
+      <div class="item-card" data-name="Salted Caramel Frappe" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Sweet and salty caramel blended into a frosty coffee treat. The perfect balance in every frosty sip.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Salted Caramel Frappe"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Salted Caramel Frappe</div><div class="desc">Sweet and salty in frosty perfection</div><span class="tag">Best Seller</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== 369 SIGNATURE ==================== -->
+  <section class="section" id="signature">
+    <h2 class="section-title">369 Signature</h2>
+    <div class="items-grid">
+
+      <div class="item-card" data-name="Brownie Mocha with Coffee" data-img="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" data-desc="Our signature creation — rich brownie chunks blended into a mocha frappe with an extra shot of espresso. Decadent and energizing.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" alt="Brownie Mocha"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Brownie Mocha with Coffee</div><div class="desc">Rich brownie chunks in mocha frappe</div><span class="tag">Signature</span></div>
+      </div>
+
+      <div class="item-card" data-name="Lotus with Coffee" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="Our signature Lotus biscuit spread blended with espresso and steamed milk. The ultimate comfort drink with a cult following.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Lotus with Coffee"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Lotus with Coffee</div><div class="desc">Signature Lotus biscuit spread latte</div><span class="tag">Signature</span></div>
+      </div>
+
+      <div class="item-card" data-name="Strawberry with Coffee" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="Fresh strawberry syrup swirled into espresso and steamed milk. A surprising and delightful flavor combination.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Strawberry with Coffee"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Strawberry with Coffee</div><div class="desc">Fresh strawberry swirled in espresso</div><span class="tag">Signature</span></div>
+      </div>
+
+      <div class="item-card" data-name="Raspberry with Coffee" data-img="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" data-desc="Tart raspberry meets bold espresso in this signature creation. Bold, fruity, and utterly unique.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600" alt="Raspberry with Coffee"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Raspberry with Coffee</div><div class="desc">Tart raspberry meets bold espresso</div><span class="tag">Signature</span></div>
+      </div>
+
+      <div class="item-card" data-name="Cheesecake without Coffee" data-img="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" data-desc="A creamy cheesecake-inspired drink without the coffee. Rich, velvety, and dessert-like in every sip.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" alt="Cheesecake"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Cheesecake without Coffee</div><div class="desc">Creamy cheesecake-inspired drink</div><span class="tag">No Coffee</span></div>
+      </div>
+
+      <div class="item-card" data-name="Raspberry Cheesecake Without Coffee" data-img="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" data-desc="Tart raspberry swirled into a creamy cheesecake base. No coffee, all dessert, pure indulgence.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" alt="Raspberry Cheesecake"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Raspberry Cheesecake Without Coffee</div><div class="desc">Tart raspberry in creamy cheesecake</div><span class="tag">No Coffee</span></div>
+      </div>
+
+      <div class="item-card" data-name="Cheesecake Coconut without Coffee" data-img="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600" data-desc="Tropical coconut meets creamy cheesecake in this coffee-free signature. A vacation in a cup.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=600" alt="Cheesecake Coconut"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Cheesecake Coconut without Coffee</div><div class="desc">Tropical coconut creamy cheesecake</div><span class="tag">No Coffee</span></div>
+      </div>
+
+      <div class="item-card" data-name="Chocolate Wafer without Coffee" data-img="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" data-desc="Crispy chocolate wafer blended into a creamy, coffee-free treat. Dessert in a glass with a satisfying crunch.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=600" alt="Chocolate Wafer"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Chocolate Wafer without Coffee</div><div class="desc">Crispy wafer in creamy chocolate treat</div><span class="tag">No Coffee</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== SMOOTHIES ==================== -->
+  <section class="section" id="smoothies">
+    <h2 class="section-title">Smoothies</h2>
+    <div class="items-grid">
+
+      <div class="item-card" data-name="Mango Smoothie" data-img="https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=600" data-desc="Sun-ripened mangoes blended into a thick, creamy smoothie. Tropical sunshine in every sip.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=600" alt="Mango Smoothie"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Mango Smoothie</div><div class="desc">Sun-ripened mango tropical sunshine</div><span class="tag">Fruity</span></div>
+      </div>
+
+      <div class="item-card" data-name="Banana Smoothie" data-img="https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=600" data-desc="Creamy banana blended to silky perfection. Naturally sweet, satisfying, and packed with energy.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=600" alt="Banana Smoothie"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Banana Smoothie</div><div class="desc">Creamy banana silky perfection</div><span class="tag">Fruity</span></div>
+      </div>
+
+      <div class="item-card" data-name="Strawberry Smoothie" data-img="https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=600" data-desc="Fresh strawberries blended into a vibrant pink smoothie. Sweet, tangy, and refreshingly delicious.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=600" alt="Strawberry Smoothie"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Strawberry Smoothie</div><div class="desc">Fresh strawberry vibrant pink delight</div><span class="tag">Fruity</span></div>
+      </div>
+
+      <div class="item-card" data-name="Raspberry Smoothie" data-img="https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=600" data-desc="Tart raspberries blended into a thick, jewel-toned smoothie. Bold berry flavor in every sip.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=600" alt="Raspberry Smoothie"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Raspberry Smoothie</div><div class="desc">Tart raspberry jewel-toned delight</div><span class="tag">Fruity</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== MOJITO ==================== -->
+  <section class="section" id="mojito">
+    <h2 class="section-title">Mojito</h2>
+    <div class="items-grid">
+
+      <div class="item-card" data-name="Peace Mojito" data-img="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" data-desc="A refreshing blend of mint, lime, and peace fruit. Cool, crisp, and perfectly balanced.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" alt="Peace Mojito"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Peace Mojito</div><div class="desc">Mint, lime, and peace fruit refreshment</div><span class="tag">Refreshing</span></div>
+      </div>
+
+      <div class="item-card" data-name="Passion Mojito" data-img="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" data-desc="Tropical passion fruit meets classic mojito. Exotic, tangy, and irresistibly refreshing.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" alt="Passion Mojito"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Passion Mojito</div><div class="desc">Tropical passion fruit classic mojito</div><span class="tag">Tropical</span></div>
+      </div>
+
+      <div class="item-card" data-name="Mango Mojito" data-img="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" data-desc="Sweet mango blended with mint and lime. A tropical twist on the Cuban classic.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" alt="Mango Mojito"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Mango Mojito</div><div class="desc">Sweet mango tropical Cuban classic</div><span class="tag">Tropical</span></div>
+      </div>
+
+      <div class="item-card" data-name="Strawberry Mojito" data-img="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" data-desc="Fresh strawberries muddled with mint and lime. Sweet, tart, and beautifully pink.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" alt="Strawberry Mojito"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Strawberry Mojito</div><div class="desc">Fresh strawberry mint and lime</div><span class="tag">Fruity</span></div>
+      </div>
+
+      <div class="item-card" data-name="Blueberry Mojito" data-img="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" data-desc="Juicy blueberries muddled with fresh mint and lime. Deep purple and deeply refreshing.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" alt="Blueberry Mojito"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Blueberry Mojito</div><div class="desc">Juicy blueberry mint and lime</div><span class="tag">Berry</span></div>
+      </div>
+
+      <div class="item-card" data-name="Mint Margarita" data-img="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" data-desc="A zesty margarita with a minty twist. Sharp, refreshing, and dangerously drinkable.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" alt="Mint Margarita"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Mint Margarita</div><div class="desc">Zesty margarita with minty twist</div><span class="tag">Zesty</span></div>
+      </div>
+
+      <div class="item-card" data-name="Blueberry Margarita" data-img="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" data-desc="Sweet blueberries meet tangy margarita. A beautiful purple cocktail that's as tasty as it looks.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" alt="Blueberry Margarita"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Blueberry Margarita</div><div class="desc">Sweet blueberry tangy margarita</div><span class="tag">Berry</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== ICED TEA ==================== -->
+  <section class="section" id="iced-tea">
+    <h2 class="section-title">Iced Tea</h2>
+    <div class="items-grid">
+
+      <div class="item-card" data-name="Peach Iced Tea" data-img="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600" data-desc="Sweet peach infused into crisp iced tea. Southern charm in a glass, refreshingly fruity.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600" alt="Peach Iced Tea"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Peach Iced Tea</div><div class="desc">Sweet peach crisp iced tea</div><span class="tag">Fruity</span></div>
+      </div>
+
+      <div class="item-card" data-name="Passion Fruit Iced Tea" data-img="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600" data-desc="Exotic passion fruit swirled into chilled tea. Tropical, tangy, and totally refreshing.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600" alt="Passion Fruit Iced Tea"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Passion Fruit Iced Tea</div><div class="desc">Exotic passion fruit chilled tea</div><span class="tag">Tropical</span></div>
+      </div>
+
+      <div class="item-card" data-name="Mango Iced Tea" data-img="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600" data-desc="Ripe mango blended into classic iced tea. A tropical vacation in every refreshing sip.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600" alt="Mango Iced Tea"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Mango Iced Tea</div><div class="desc">Ripe mango classic iced tea</div><span class="tag">Tropical</span></div>
+      </div>
+
+      <div class="item-card" data-name="Strawberry Iced Tea" data-img="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600" data-desc="Fresh strawberry sweetness infused into crisp tea. Pink, pretty, and perfectly refreshing.">
+        <div class="img-wrap"><img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600" alt="Strawberry Iced Tea"><div class="img-overlay"></div></div>
+        <div class="info"><div class="name">Strawberry Iced Tea</div><div class="desc">Fresh strawberry crisp tea</div><span class="tag">Fruity</span></div>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-content">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <img class="modal-img" id="modalImg" src="" alt="">
+    <div class="modal-body">
+      <h3 class="modal-title" id="modalTitle"></h3>
+      <p class="modal-desc" id="modalDesc"></p>
+      <button class="order-btn">Add to Order</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== CATEGORY SWITCHING =====
+  const catBtns = document.querySelectorAll('.cat-btn');
+  const sections = document.querySelectorAll('.section');
+
+  catBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      catBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = btn.dataset.cat;
+      sections.forEach(sec => {
+        sec.classList.remove('active');
+        if (sec.id === target) sec.classList.add('active');
+      });
+    });
+  });
+
+  // ===== MODAL =====
+  const modalOverlay = document.getElementById('modalOverlay');
+  const modalImg = document.getElementById('modalImg');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc = document.getElementById('modalDesc');
+  const modalClose = document.getElementById('modalClose');
+
+  document.querySelectorAll('.item-card').forEach(card => {
+    card.addEventListener('click', () => {
+      modalImg.src = card.dataset.img;
+      modalImg.alt = card.dataset.name;
+      modalTitle.textContent = card.dataset.name;
+      modalDesc.textContent = card.dataset.desc;
+      modalOverlay.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  modalClose.addEventListener('click', () => {
+    modalOverlay.classList.remove('show');
+    document.body.style.overflow = '';
+  });
+
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) {
+      modalOverlay.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // ===== FLOATING PARTICLES =====
+  const particlesContainer = document.getElementById('particles');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.animationDelay = Math.random() * 15 + 's';
+    p.style.animationDuration = (10 + Math.random() * 10) + 's';
+    particlesContainer.appendChild(p);
+  }
+</script>
+
+</body>
+</html>
